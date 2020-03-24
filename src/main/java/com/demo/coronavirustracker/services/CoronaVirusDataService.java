@@ -1,7 +1,6 @@
 package com.demo.coronavirustracker.services;
 
 import com.demo.coronavirustracker.models.LocationStats;
-import lombok.Data;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVRecord;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -18,12 +17,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Service
-@Data
 public class CoronaVirusDataService {
 
     private static String VIRUS_DATA_URL = "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_19-covid-Confirmed.csv";
 
     private List<LocationStats> allStats = new ArrayList<>();
+
+    public List<LocationStats> getAllStats() {
+        return allStats;
+    }
 
     @PostConstruct
     @Scheduled(cron = "* * 1 * * *")
@@ -34,7 +36,7 @@ public class CoronaVirusDataService {
                    .uri(URI.create(VIRUS_DATA_URL))
                    .build();
         HttpResponse<String> httpResponse = client.send(request, HttpResponse.BodyHandlers.ofString());
-        System.out.println(httpResponse.body());
+
 
         StringReader csvBodyReader = new StringReader(httpResponse.body());
         Iterable<CSVRecord> records = CSVFormat.DEFAULT.withFirstRecordAsHeader().parse(csvBodyReader);
@@ -44,7 +46,6 @@ public class CoronaVirusDataService {
             locationStat.setCountry(record.get("Country/Region"));
             locationStat.setLatestTotalCases(record.get(record.size() - 1));
 
-            System.out.println(locationStat);
             newStats.add(locationStat);
         }
         this.allStats = newStats;
