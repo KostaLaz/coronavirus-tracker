@@ -30,12 +30,21 @@ public class LocationStats {
         this.latestTotalCases = latestTotalCases;
     }
 
+    public int getPrevDayCases() {
+        return prevDayCases;
+    }
+
+    public void setPrevDayCases(int prevDayCases) {
+        this.prevDayCases = prevDayCases;
+    }
+
     @Override
     public String toString() {
         return "LocationStats{" +
                 "state='" + state + '\'' +
                 ", country='" + country + '\'' +
-                ", latestTotalCases='" + latestTotalCases + '\'' +
+                ", latestTotalCases=" + latestTotalCases +
+                ", prevDayCases=" + prevDayCases +
                 '}';
     }
 }
